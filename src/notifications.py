@@ -11,5 +11,6 @@ COLORS = {
 }
 
 # Функція для виводу сповіщень
-def print_message(message: str, color: str):
-    print(f"{COLORS[color]}{message}{Style.RESET_ALL}")
+def print_message(message: str, color: str, end: str = '\n'):
+    print(f"{COLORS[color]}{message}{Style.RESET_ALL}", end=end)
+    return ''
