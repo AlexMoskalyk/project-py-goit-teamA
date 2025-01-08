@@ -41,6 +41,10 @@ class Email(Field):
     @staticmethod
     def validate(value):
         return bool(re.fullmatch(r"[^@]+@[^@]+\.[^@]+", value))
+    
+    def get_value(self):
+        """Повертає значення email."""
+        return self.value
 
 
 class Address(Field):
@@ -82,6 +86,8 @@ class Record:
             raise ValueError(f"Contact {self.name.value} has no phone number to edit.")
         if not Phone.validate(new_number):
             raise ValueError("Новий номер телефону повинен містити рівно 10 цифр.")
+        if self.phone.value == new_number:
+            raise ValueError("Контакт вже має такий номер телефону")
         self.phone.value = new_number
 
     def remove_phone(self):
@@ -91,6 +97,15 @@ class Record:
 
     def add_email(self, email):
         self.email = Email(email)
+
+    def edit_email(self, new_email):
+        if not self.email:
+            raise ValueError(f"Contact {self.name.value} has no email to edit.")
+        if not Email.validate(new_email):
+            raise ValueError("Новий email не відповідає формату.")
+        if self.email.value == new_email:
+            raise ValueError("Контакт вже має такий email")
+        self.email.value = new_email
 
     def add_address(self, address):
         self.address = Address(address)
