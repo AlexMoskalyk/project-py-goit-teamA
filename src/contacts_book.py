@@ -29,6 +29,10 @@ class Phone(Field):
     @staticmethod
     def validate(value):
         return bool(re.fullmatch(r"\d{10}", value))
+    
+    def get_value(self):
+        """Повертає значення контакту."""
+        return self.value
 
 
 class Email(Field):
