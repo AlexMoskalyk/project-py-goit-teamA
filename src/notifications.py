@@ -7,7 +7,8 @@ init(autoreset=True)
 COLORS = {
     'ERROR': Fore.RED,
     'SUCCESS': Fore.GREEN,
-    'INPUT': Fore.BLUE
+    'INPUT': Fore.BLUE,
+    'WARNING': Fore.YELLOW,
 }
 
 # Функція для виводу сповіщень

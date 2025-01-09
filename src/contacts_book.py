@@ -1,6 +1,7 @@
 from collections import UserDict
 from datetime import datetime, timedelta
 import re
+from src.notifications import print_message
 
 
 class Field:
@@ -94,9 +95,12 @@ class Record:
             raise ValueError("Контакт вже має такий номер телефону")
         self.phone.value = new_number
 
-    def remove_phone(self):
+    def remove_phone(self, phone_number=None):
+        
         if not self.phone:
             raise ValueError(f"Contact {self.name.value} has no phone number to remove.")
+        if phone_number and self.phone.value != phone_number:
+            raise ValueError(f"The phone number {phone_number} does not match the stored phone.")
         self.phone = None
 
     def add_email(self, email):
@@ -131,15 +135,22 @@ class ContactsBook(UserDict):
     """Клас для зберігання та управління записами у книзі контактів."""
     def add_record(self, record):
         self.data[record.name.value] = record
+        
 
     def find(self, name):
-        return self.data.get(name)
+        record = self.data.get(name)
+        if record:
+            print_message(f"Contact found: {record}", 'SUCCESS')
+        else:
+            print_message(f"No contact found with the name {name}.", 'ERROR')
+        return record
 
     def delete(self, name):
         if name in self.data:
             del self.data[name]
+            print_message(f"Contact {name} deleted successfully.", 'SUCCESS')
         else:
-            print(f"Запис з ім'ям {name} не знайдено.")
+            print_message(f"No contact found with the name {name}.", 'ERROR')
 
     def get_upcoming_birthdays(self):
         upcoming_birthdays = []
@@ -149,6 +160,8 @@ class ContactsBook(UserDict):
                 birthday_this_year = record.birthday.value.replace(year=today.year)
                 if today <= birthday_this_year <= today + timedelta(days=7):
                     upcoming_birthdays.append(record)
+        if not upcoming_birthdays:
+            print_message("No upcoming birthdays found.", 'INFO')
         return upcoming_birthdays
 
 
@@ -158,7 +171,7 @@ def input_error(func):
         try:
             return func(*args, **kwargs)
         except (IndexError, ValueError) as e:
-            return str(e)
+            print_message(str(e), 'ERROR')
     return wrapper
 
 
@@ -168,19 +181,15 @@ def add_contact(args, book):
 
     name, phone, email, address, birthday = args
 
-    record = Record(name)
-    
-    
+    record = Record(name)   
     if phone:
         record.add_phone(phone)
 
- 
     if email:
         record.add_email(email)
     if address:
         record.add_address(address)
     if birthday:
-        record.add_birthday(birthday)
-   
+        record.add_birthday(birthday) 
     book.add_record(record)
-    return f"Contact {name} added successfully."
+    print_message(f"Contact {name} added successfully.", 'SUCCESS')
