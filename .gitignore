@@ -67,3 +67,6 @@ desktop.ini
 
 # Исключить настройки Docker (если используется)
 docker-compose.override.yml
+
+# Исключить файлы хранения
+*.pkl
