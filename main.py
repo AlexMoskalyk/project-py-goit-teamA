@@ -9,6 +9,7 @@ def helper():
         "show": "Показати всі контакти.",
         "find": "Знайти контакт за іменем.",
         "delete": "Видалити контакт за іменем.",
+        "edit email": "Змінити email контакту",
         "edit phone": "Змінити номер телефону контакту.",
         "delete phone": "Видалити номер телефону контакту.",
         "birthdays": "Показати контакти з майбутніми днями народження.",
@@ -84,7 +85,16 @@ def edit_contact_phone(book):
     record.edit_phone(new_phone)
     return f"Phone number for {name} updated successfully."
 
-
+@input_error
+def edit_contact_email(book):
+    name = input("Enter the contact's name to edit the email: ").strip()
+    record = book.find(name)
+    if not record:
+        return f"No contact found with the name {name}."
+    
+    new_email = input("Enter the new email: ").strip()
+    record.edit_email(new_email)
+    return f"Email for {name} updated successfully."
 
 @input_error
 def delete_contact_phone(book):
@@ -117,6 +127,9 @@ def main():
 
         elif command == "delete phone":
             print(delete_contact_phone(book))
+
+        elif command == "edit email":
+            print(edit_contact_email(book))
 
         elif command == "show":
             if not book.data:
