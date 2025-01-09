@@ -1,11 +1,22 @@
 
 import sys
 import os
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import WordCompleter
 # Додаємо поточний шлях до sys.path 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from src.contacts_book import ContactsBook, input_error, add_contact, Phone, Email, Birthday, Name,Address
 from src.notifications import print_message
 from src.notes import Note, NoteBook, TextNote
+
+# Список ключових слів для автозаповнення
+keywords = [
+    'add contact', 'show contacts', 'find contact', 'delete contact',
+    'edit contact email', 'edit contact phone', 'delete contact phone',
+    'contacts birthdays', 'add note', 'show notes', 'find note',
+    'edit note', 'delete note', 'sort notes', 'cancel','help', 'exit' 
+]
+completer = WordCompleter(keywords, ignore_case=True)
 
 def helper():
     """Виводить список доступних команд."""
@@ -176,7 +187,7 @@ def main():
 
     while True:
         try:
-            command = input("Enter command: ").strip().lower()
+            command = prompt("Enter command: ", completer=completer).strip().lower()
             check_cancel(command)
 
             if command == "add contact":
