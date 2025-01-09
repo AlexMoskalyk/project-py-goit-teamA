@@ -169,9 +169,9 @@ def main():
 
     book = ContactsBook()
     notebook = NoteBook()
-    notebook.load_notes()
-
+    
     print("Welcome to the Contact Book Assistant!")
+    notebook.load_notes(show_error = False)
     print("Type 'help' to see the list of available commands.")
 
     while True:
@@ -222,7 +222,7 @@ def main():
                 helper()
 
             elif command == "exit":
-                notebook.save_notes()
+                notebook.save_notes(show_error = False)
                 print("Goodbye!")
                 sys.exit()
 

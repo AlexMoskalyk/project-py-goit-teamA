@@ -1,6 +1,6 @@
 import pickle
 from typing import List
-from src.notifications import print_message
+from notifications import print_message
 from contacts_book import Field
 
 class TextNote(Field):
@@ -23,7 +23,11 @@ class NoteBook:
         self.notes: List[Note] = []
 
     def add_note(self, note: Note):
-        self.notes.append(note)
+        for existing_note in self.notes:
+            if existing_note.text.value.lower() == note.text.value.lower():
+                print_message("Нотатка з таким текстом вже існує.", 'ERROR')
+                return
+        self.notes.append(note) 
         print_message("Нотатка успішно додана.", 'SUCCESS')
 
     def search_notes(self, query: str) -> List[Note]:
@@ -55,18 +59,23 @@ class NoteBook:
                 return
         print_message("Нотатку не знайдено.", 'ERROR')
 
-    def save_notes(self, filename: str = 'notes.pkl'):
+    def save_notes(self, filename: str = 'notes.pkl', show_error: bool = True):
+        if not self.notes:
+            if show_error:
+                print_message("Немає нотаток для збереження.", 'ERROR')
+            return
         with open(filename, 'wb') as file:
             pickle.dump(self.notes, file)
         print_message("Нотатки успішно збережені.", 'SUCCESS')
 
-    def load_notes(self, filename: str = 'notes.pkl'):
+    def load_notes(self, filename: str = 'notes.pkl', show_error: bool = True):
         try:
             with open(filename, 'rb') as file:
                 self.notes = pickle.load(file)
             print_message("Нотатки успішно завантажені.", 'SUCCESS')
         except FileNotFoundError:
-            print_message("Немає збережених нотаток.", 'ERROR')
+            if show_error:
+                print_message("Немає збережених нотаток.", 'ERROR')
 
     def display_notes(self):
         if not self.notes:
