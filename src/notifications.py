@@ -1,15 +1,15 @@
-from colorama import init, Fore, Style
+from colorama import Fore, Style, init
 
-# Ініціалізація colorama
 init(autoreset=True)
 
-# Словник для кольорів
-COLORS = {
-    'ERROR': Fore.RED,
-    'SUCCESS': Fore.GREEN,
-    'INPUT': Fore.BLUE
-}
-
-# Функція для виводу сповіщень
-def print_message(message: str, color: str):
-    print(f"{COLORS[color]}{message}{Style.RESET_ALL}")
+def print_message(message: str, message_type: str):
+    if message_type == 'SUCCESS':
+        print(Fore.GREEN + message)
+    elif message_type == 'ERROR':
+        print(Fore.RED + message)
+    elif message_type == 'INPUT':
+        print(Fore.BLUE + message)
+    elif message_type == 'WARNING':
+        print(Fore.YELLOW + message)
+    else:
+        print(Fore.WHITE + message)
