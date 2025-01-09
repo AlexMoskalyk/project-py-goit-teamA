@@ -2,6 +2,7 @@ from collections import UserDict
 from datetime import datetime, timedelta
 import re
 from src.notifications import print_message
+import pickle
 
 
 class Field:
@@ -64,7 +65,7 @@ class Birthday(Field):
     """Клас для зберігання дати народження у форматі DD.MM.YYYY."""
     def __init__(self, value):
         try:
-            self.value = datetime.strptime(value, "%d.%m.%Y")
+            self.value = datetime.strptime(value, "%d.%m.%Y").date()
         except ValueError:
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
 
@@ -118,9 +119,22 @@ class Record:
     def add_address(self, address):
         self.address = Address(address)
 
+    def edit_address(self, new_address):
+        if not self.address:
+            raise ValueError(f"Contact {self.name.value} has no address to edit.")
+        if self.address.value == new_address:
+            raise ValueError("The same address is already exist")
+        self.address.value = new_address
+
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
 
+    def edit_birthday(self, new_birthday):
+        if not self.birthday:
+            raise ValueError(f"Contact {self.name.value} has no birthday to edit.")
+        if self.birthday.value == new_birthday:
+            raise ValueError(f"Contact {self.name.value} has birthday this birthday already.")
+        self.birthday = new_birthday
 
 
     def __str__(self):
@@ -163,6 +177,26 @@ class ContactsBook(UserDict):
         if not upcoming_birthdays:
             print_message("No upcoming birthdays found.", 'INFO')
         return upcoming_birthdays
+    
+    def save_contacts_book(self, filename: str = 'contact_book.pkl'):
+        with open(filename, 'wb') as file:
+            pickle.dump(self.data, file)
+        print_message("Contacts successfully saved", 'SUCCESS')
+
+    def load_contacts_book(self, filename: str = 'contact_book.pkl'):
+        try:
+            with open(filename, 'rb') as file:
+                self.data = pickle.load(file)
+            print_message("Contacts successfully loaded", 'SUCCESS')
+        except FileNotFoundError:
+            print_message("No saved contacts found.", 'WARNING')
+
+    def display_contacts(self):
+        if not self.data:
+            print_message("Contacts is empty", 'ERROR')
+        else:
+            for contact in self.data.values():
+                print_message(str(contact), 'SUCCESS')
 
 
 def input_error(func):
