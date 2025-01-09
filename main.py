@@ -1,6 +1,11 @@
 
 import sys
+import os
+# Додаємо поточний шлях до sys.path 
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from src.contacts_book import ContactsBook, input_error, add_contact, Phone, Email, Birthday, Name,Address
+from src.notifications import print_message
+from src.notes import Note, NoteBook, TextNote
 
 def helper():
     """Виводить список доступних команд."""
@@ -13,6 +18,12 @@ def helper():
         "edit phone": "Змінити номер телефону контакту.",
         "delete phone": "Видалити номер телефону контакту.",
         "birthdays": "Показати контакти з майбутніми днями народження.",
+        "add note": "Додати нову нотатку",
+        "show notes": "Показати всі нотатки.",
+        "find note": "Пошук нотатки",
+        "edit note": "Редагування нотатки",
+        "del note": "Видалення нотатки",
+        "sort notes": "Сортування нотаток за тегом",
         "help": "Показати список доступних команд.",
         "exit": "Вийти з програми.",
     }
@@ -107,11 +118,34 @@ def delete_contact_phone(book):
     record.remove_phone(phone_to_remove)
     return f"Phone number {phone_to_remove} removed for {name}."
 
+@input_error
+def add_note_interactive(notebook):
+    """Додавання нотатки."""
+    while True:
+        try:
+            print_message("Note text: ", 'INPUT','') 
+            text = TextNote(input().strip())    
+            break
+        except ValueError as e:
+            print_message(e, 'ERROR')
+
+    while True:
+        try:
+            print_message("Tags (comma separated): ", 'INPUT','')
+            tags = input().split(',')
+            break
+        except ValueError as e:
+            print(e)
+
+    note = Note(text, tags)
+    notebook.add_note(note)
 
 def main():
     """Головна функція для запуску термінального помічника."""
 
     book = ContactsBook()
+    notebook = NoteBook()
+    notebook.load_notes()
 
     print("Welcome to the Contact Book Assistant!")
     print("Type 'help' to see the list of available commands.")
@@ -166,11 +200,39 @@ def main():
             helper()
 
         elif command == "exit":
+            notebook.save_notes()
             print("Goodbye!")
             sys.exit()
-
+        elif command == 'add note':
+            add_note_interactive(notebook)
+        elif command == 'find note':
+            print_message("Enter query: ", 'INPUT','')
+            query = input()
+            results = notebook.search_notes(query)
+            for note in results:
+                print(note)
+        elif command == 'del note':
+            print_message("Note text: ", 'INPUT','')
+            text = input()
+            notebook.remove_note(text)
+        elif command == 'edit note':
+            print_message("Old note text: ", 'INPUT','')
+            old_text = input()
+            print_message("New note text: ", 'INPUT', '')
+            new_text = input()
+            print_message("New tags (comma separated): ", 'INPUT', '')
+            new_tags = input().split(',')
+            notebook.edit_note(old_text, new_text, new_tags)
+        elif command == 'sort notes':
+            print_message("Tag to sort by: ", 'INPUT', '')
+            tag = input() 
+            sorted_notes = notebook.sort_notes_by_tag(tag)
+            for note in sorted_notes:
+                print_message(str(note), 'SUCCESS')         
+        elif command == 'show notes':
+            notebook.display_notes()
         else:
-            print("Unknown command. Type 'help' to see available commands.")
+            print_message("Unknown command. Type 'help' to see available commands.",'ERROR')
 
 
 if __name__ == "__main__":
