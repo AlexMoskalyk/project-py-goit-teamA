@@ -9,5 +9,7 @@ def print_message(message: str, message_type: str):
         print(Fore.RED + message)
     elif message_type == 'INPUT':
         print(Fore.BLUE + message)
+    elif message_type == 'WARNING':
+        print(Fore.YELLOW + message)
     else:
         print(Fore.WHITE + message)
