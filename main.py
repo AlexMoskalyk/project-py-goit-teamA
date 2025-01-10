@@ -7,7 +7,7 @@ from prompt_toolkit.completion import WordCompleter
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from src.contacts_book import ContactsBook, input_error, add_contact, Phone, Email, Birthday, Name,Address
 from src.notifications import print_message
-from src.notes import Note, NoteBook, TextNote
+from src.notes import Note, NoteBook, Title
 
 # Список ключових слів для автозаповнення
 keywords = [
@@ -45,12 +45,10 @@ def helper():
     for command, description in commands.items():
         print(f"  {command:15} - {description}")
 
-
 def check_cancel(input_text: str):
     """Перевіряє, чи ввів користувач команду скасування."""
     if input_text.strip().lower() == "cancel":
         raise KeyboardInterrupt("Операція була скасована.")
-
 
 @input_error
 def add_contact_interactive(book):
@@ -110,8 +108,6 @@ def add_contact_interactive(book):
     ]
 
     add_contact(args, book)
-
-
 
 @input_error
 def edit_contact_phone(book):
@@ -183,26 +179,54 @@ def add_note_interactive(notebook):
     """Додавання нотатки."""
     while True:
         try:
-            print_message("Note text (or type 'cancel' to stop): ", 'INPUT','') 
-            text = input().strip()
-            check_cancel(text)
-            text = TextNote(text)    
+            print_message("Title (or type 'cancel' to stop): ", 'INPUT','') 
+            title = input().strip()
+            check_cancel(title)
+            title = Title(title)    
             break
         except ValueError as e:
             print_message(e, 'ERROR')
 
+    print_message("Note text (or type 'cancel' to stop): ", 'INPUT','') 
+    text = input().strip()
+    check_cancel(text)
+
+    print_message("Tags (comma separated, or type 'cancel' to stop): ", 'INPUT','')
+    tags = [tag.strip() for tag in input().split(',')]
+    check_cancel("")
+       
+    note = Note(title, text, tags)
+    notebook.add_note(note)
+
+@input_error
+def edit_note_interactive(notebook):
+    while True:
+        print_message("Old note title (or type 'cancel' to stop): ", 'INPUT','') 
+        old_title = input().strip()
+        check_cancel(old_title)
+        if notebook.note_exists(old_title):
+            break
+        print_message("Note not found.", 'ERROR')
+
     while True:
         try:
-            print_message("Tags (comma separated, or type 'cancel' to stop): ", 'INPUT','')
-            tags_input = input()
-            check_cancel(tags_input)
-            tags = tags_input.split(',')
+            print_message("New note title (or type 'cancel' to stop): ", 'INPUT','') 
+            new_title = input().strip()
+            check_cancel(new_title)
+            new_title = Title(new_title)    
             break
         except ValueError as e:
-            print(e)
+            print_message(e, 'ERROR')
 
-    note = Note(text, tags)
-    notebook.add_note(note)
+    print_message("New note text (or type 'cancel' to stop): ", 'INPUT','') 
+    new_text = input().strip()
+    check_cancel(new_text)
+
+    print_message("New tags (comma separated, or type 'cancel' to stop): ", 'INPUT','')
+    new_tags = [tag.strip() for tag in input().split(',')]
+    check_cancel("")
+    
+    notebook.edit_note(old_title, new_title, new_text, new_tags)
 
 def main():
     """Головна функція для запуску термінального помічника."""
@@ -288,15 +312,7 @@ def main():
                 notebook.remove_note(text)
 
             elif command == 'edit note':
-                print_message("Old note text (or type 'cancel' to stop): ", 'INPUT','')
-                old_text = input()
-                check_cancel(old_text)
-                print_message("New note text (or type 'cancel' to stop): ", 'INPUT', '')
-                new_text = input()
-                check_cancel(new_text)
-                print_message("New tags (comma separated, or type 'cancel' to stop): ", 'INPUT', '')
-                new_tags = input().split(',')
-                notebook.edit_note(old_text, new_text, new_tags)
+                edit_note_interactive(notebook)
 
             elif command == 'sort notes':
                 print_message("Tag to sort by (or type 'cancel' to stop): ", 'INPUT', '')
