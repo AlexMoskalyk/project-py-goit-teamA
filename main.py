@@ -29,6 +29,8 @@ def helper():
         "edit contact phone": "Змінити номер телефону контакту.",
         "delete contact phone": "Видалити номер телефону контакту.",
         "contacts birthdays": "Показати контакти з майбутніми днями народження.",
+        "edit contact birthday": "Edit a birthday day in contact",
+        "edit contact address": "Edit a address in contact",
         "add note": "Додати нову нотатку",
         "show notes": "Показати всі нотатки.",
         "find note": "Пошук нотатки",
@@ -138,6 +140,32 @@ def edit_contact_email(book):
     return print_message(f"Email for {name} updated successfully.", 'SUCCESS')
 
 @input_error
+def edit_contact_birthday(book):
+    name = input("Enter the contact's name to edit the birthday date (or type 'cancel' to stop): ").strip()
+    check_cancel(name)
+    record = book.find(name)
+    if not record:
+        return print_message(f"No contact found with the name {name}.)", 'ERROR')
+    
+    new_birthday = input("Enter the new birthday date (or type 'cancel' to stop): ").strip()
+    check_cancel(new_birthday)
+    record.edit_birthday(new_birthday)
+    return print_message(f"Birthday date for {name} have been successfully updated.", 'SUCCESS')
+
+@input_error
+def edit_contact_address(book):
+    name = input("Enter the contact's name to edit the address (or type 'cancel' to stop): ").strip()
+    check_cancel(name)
+    record = book.find(name)
+    if not record:
+        return print_message(f"No contact found with the name {name}.)", 'ERROR')
+    
+    new_address = input("Enter the new address (or type 'cancel' to stop): ").strip()
+    check_cancel(new_address)
+    record.edit_address(new_address)
+    return print_message(f"A new address for {name} have been successfully updated.", 'SUCCESS')
+
+@input_error
 def delete_contact_phone(book):
     name = input("Enter the contact's name to delete a phone number (or type 'cancel' to stop): ").strip()
     check_cancel(name)
@@ -149,6 +177,7 @@ def delete_contact_phone(book):
     check_cancel(phone_to_remove)
     record.remove_phone(phone_to_remove)
     return print_message(f"Phone number {phone_to_remove} removed for {name}."  , 'SUCCESS')
+
 @input_error
 def add_note_interactive(notebook):
     """Додавання нотатки."""
@@ -180,9 +209,10 @@ def main():
 
     book = ContactsBook()
     notebook = NoteBook()
-    
+
     print("Welcome to the Contact Book Assistant!")
     notebook.load_notes(show_error = False)
+    book.load_contacts_book()
     print("Type 'help' to see the list of available commands.")
 
     while True:
@@ -203,11 +233,7 @@ def main():
                 edit_contact_email(book)
 
             elif command == "show contacts":
-                if not book.data:
-                    print_message("Contact book is empty." , 'ERROR')
-                else:
-                    for record in book.values():
-                        print_message(record , 'SUCCESS')
+                book.display_contacts()
 
             elif command == "find contact":
                 name = input("Enter name to find (or type 'cancel' to stop): ").strip()
@@ -229,10 +255,17 @@ def main():
                     for record in upcoming:
                         print(record)
 
+            elif command == "edit contact birthday":
+                edit_contact_birthday(book)
+
+            elif command == "edit contact address":
+                edit_contact_address(book)
+
             elif command == "help":
                 helper()
 
             elif command == "exit":
+                book.save_contacts_book()
                 notebook.save_notes(show_error = False)
                 print("Goodbye!")
                 sys.exit()
