@@ -100,3 +100,17 @@ class NoteBook:
             if note.title.value.lower() == title.lower():
                 return True
         return False
+
+    def display_help(self):
+        help_message = """
+        Доступні команди:
+        - add: Додати нову нотатку
+        - search: Пошук нотаток
+        - sort: Сортувати нотатки за тегом
+        - remove: Видалити нотатку
+        - edit: Редагувати нотатку
+        - save: Зберегти нотатки
+        - load: Завантажити нотатки
+        - display: Відобразити всі нотатки
+        """
+        print_message(help_message, 'HELP')
