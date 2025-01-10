@@ -11,5 +11,7 @@ def print_message(message: str, message_type: str):
         print(Fore.BLUE + message)
     elif message_type == 'WARNING':
         print(Fore.YELLOW + message)
+    elif message_type == 'HELP':
+        print(Fore.MAGENTA + message)
     else:
         print(Fore.WHITE + message)
