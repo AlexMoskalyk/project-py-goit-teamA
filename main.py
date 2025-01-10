@@ -209,10 +209,16 @@ def main():
 
     book = ContactsBook()
     notebook = NoteBook()
+<<<<<<< HEAD
+    
+    print("Welcome to the Contact Book Assistant!")
+    notebook.load_notes(show_error = False)
+=======
 
     print("Welcome to the Contact Book Assistant!")
     notebook.load_notes(show_error = False)
     book.load_contacts_book()
+>>>>>>> 1b1c3d00765294d10ad89359add147fa6a1a2b93
     print("Type 'help' to see the list of available commands.")
 
     while True:
@@ -265,7 +271,10 @@ def main():
                 helper()
 
             elif command == "exit":
+<<<<<<< HEAD
+=======
                 book.save_contacts_book()
+>>>>>>> 1b1c3d00765294d10ad89359add147fa6a1a2b93
                 notebook.save_notes(show_error = False)
                 print("Goodbye!")
                 sys.exit()
