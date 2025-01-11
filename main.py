@@ -116,65 +116,77 @@ def add_contact_interactive(book):
 
 @input_error
 def edit_contact_phone(book):
-    name = input("Enter the contact's name to edit the phone number (or type 'cancel' to stop): ").strip()
+    print_message("Enter the contact's name to edit the phone number (or type 'cancel' to stop): ", 'INPUT', end='')
+    name = input().strip()
     check_cancel(name)
     record = book.find(name)
     if not record:
         return print_message(f"No contact found with the name {name}." , 'ERROR')
+    
 
-    new_phone = input("Enter the new phone number (or type 'cancel' to stop): ").strip()
+    print_message("Enter the new phone number (or type 'cancel' to stop): ", 'INPUT', end='')
+    new_phone = input().strip()
     check_cancel(new_phone)
     record.edit_phone(new_phone)
     return print_message(f"Phone number for {name} updated successfully." , 'SUCCESS')
 
 @input_error
 def edit_contact_email(book):
-    name = input("Enter the contact's name to edit the email (or type 'cancel' to stop): ").strip()
+
+    print_message("Enter the contact's name to edit the email (or type 'cancel' to stop): ", 'INPUT', end='')
+    name = input().strip()
     check_cancel(name)
     record = book.find(name)
     if not record:
         return print_message(f"No contact found with the name {name}.)", 'ERROR')
     
-    new_email = input("Enter the new email (or type 'cancel' to stop): ").strip()
+    print_message("Enter the new email (or type 'cancel' to stop): ", 'INPUT', end='')
+    new_email = input().strip()
     check_cancel(new_email)
     record.edit_email(new_email)
     return print_message(f"Email for {name} updated successfully.", 'SUCCESS')
 
 @input_error
 def edit_contact_birthday(book):
-    name = input("Enter the contact's name to edit the birthday date (or type 'cancel' to stop): ").strip()
+    print_message("Enter the contact's name to edit the birthday date (or type 'cancel' to stop): ", 'INPUT', end='')
+    name = input().strip()
     check_cancel(name)
     record = book.find(name)
     if not record:
         return print_message(f"No contact found with the name {name}.)", 'ERROR')
     
-    new_birthday = input("Enter the new birthday date (or type 'cancel' to stop): ").strip()
+    print_message("Enter the new birthday date (or type 'cancel' to stop): ", 'INPUT', end='')
+    new_birthday = input().strip()
     check_cancel(new_birthday)
     record.edit_birthday(new_birthday)
     return print_message(f"Birthday date for {name} have been successfully updated.", 'SUCCESS')
 
 @input_error
 def edit_contact_address(book):
-    name = input("Enter the contact's name to edit the address (or type 'cancel' to stop): ").strip()
+    print_message("Enter the contact's name to edit the address (or type 'cancel' to stop): ", 'INPUT', end='')
+    name = input().strip()
     check_cancel(name)
     record = book.find(name)
     if not record:
         return print_message(f"No contact found with the name {name}.)", 'ERROR')
     
-    new_address = input("Enter the new address (or type 'cancel' to stop): ").strip()
+    print_message("Enter the new address (or type 'cancel' to stop): ", 'INPUT', end='')
+    new_address = input().strip()
     check_cancel(new_address)
     record.edit_address(new_address)
     return print_message(f"A new address for {name} have been successfully updated.", 'SUCCESS')
 
 @input_error
 def delete_contact_phone(book):
-    name = input("Enter the contact's name to delete a phone number (or type 'cancel' to stop): ").strip()
+    print_message("Enter the contact's name to delete a phone number (or type 'cancel' to stop): ", 'INPUT', end='')
+    name = input().strip()
     check_cancel(name)
     record = book.find(name)
     if not record:
         return print_message(f"No contact found with the name {name}." , 'ERROR')
 
-    phone_to_remove = input("Enter the phone number to remove (or type 'cancel' to stop): ").strip()
+    print_message("Enter the phone number to remove (or type 'cancel' to stop): ", 'INPUT', end='')
+    phone_to_remove = input().strip()
     check_cancel(phone_to_remove)
     record.remove_phone(phone_to_remove)
     return print_message(f"Phone number {phone_to_remove} removed for {name}."  , 'SUCCESS')
@@ -239,10 +251,10 @@ def main():
     book = ContactsBook()
     notebook = NoteBook()
 
-    print("Welcome to the Contact Book Assistant!")
+    print_message("Welcome to the Contact Book Assistant!", 'SUCCESS')
     notebook.load_notes(show_message = False)
     book.load_contacts_book()
-    print("Type 'help' to see the list of available commands.")
+    print_message("Type 'help' to see the list of available commands.", 'SUCCESS')
 
     while True:
         try:
@@ -265,13 +277,15 @@ def main():
                 book.display_contacts()
 
             elif command == "find contact":
-                name = input("Enter name to find (or type 'cancel' to stop): ").strip()
+                print_message("Enter name to find (or type 'cancel' to stop): ", 'INPUT', end='')
+                name = input().strip()
                 check_cancel(name)
                 record = book.find(name)
 
 
             elif command == "delete contact":
-                name = input("Enter name to delete (or type 'cancel' to stop): ").strip()
+                print_message("Enter name to delete (or type 'cancel' to stop): ", 'INPUT', end='')
+                name = input().strip()
                 check_cancel(name)
                 book.delete(name)
 
