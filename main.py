@@ -23,10 +23,10 @@ def main():
     book = ContactsBook()
     notebook = NoteBook()
 
-    print("Welcome to the Contact Book Assistant!")
+    print_message("Welcome to the Contact Book Assistant!", 'SUCCESS')
     notebook.load_notes(show_message = False)
     book.load_contacts_book()
-    print("Type 'help' to see the list of available commands.")
+    print_message("Type 'help' to see the list of available commands.", 'SUCCESS')
 
     while True:
         try:
@@ -49,13 +49,15 @@ def main():
                 book.display_contacts()
 
             elif command == "find contact":
-                name = input("Enter name to find (or type 'cancel' to stop): ").strip()
+                print_message("Enter name to find (or type 'cancel' to stop): ", 'INPUT', end='')
+                name = input().strip()
                 check_cancel(name)
                 record = book.find(name)
 
 
             elif command == "delete contact":
-                name = input("Enter name to delete (or type 'cancel' to stop): ").strip()
+                print_message("Enter name to delete (or type 'cancel' to stop): ", 'INPUT', end='')
+                name = input().strip()
                 check_cancel(name)
                 book.delete(name)
 
@@ -121,6 +123,7 @@ def main():
             print_message("\nOperation cancelled. Returning to main menu.", 'WARNING')
         except Exception as e:
             print_message(f"Error: {e}", 'ERROR')
+
 
 if __name__ == "__main__":
     main()
