@@ -1,4 +1,3 @@
-
 import sys
 import os
 from prompt_toolkit import prompt
@@ -179,15 +178,15 @@ def add_note_interactive(notebook):
     """Додавання нотатки."""
     while True:
         try:
-            print_message("Title (or type 'cancel' to stop): ", 'INPUT','') 
-            title = input().strip()
+            print_message("Title (or type 'cancel' to stop): ", 'INPUT','')
+            title = input()
             check_cancel(title)
-            title = Title(title)    
+            title = Title(title.strip())    
             break
         except ValueError as e:
-            print_message(e, 'ERROR')
+            print_message(str(e), 'ERROR')
 
-    print_message("Note text (or type 'cancel' to stop): ", 'INPUT','') 
+    print_message("Note text (or type 'cancel' to stop): ", 'INPUT','')
     text = input().strip()
     check_cancel(text)
 
@@ -201,7 +200,7 @@ def add_note_interactive(notebook):
 @input_error
 def edit_note_interactive(notebook):
     while True:
-        print_message("Old note title (or type 'cancel' to stop): ", 'INPUT','') 
+        print_message("Old note title (or type 'cancel' to stop): ", 'INPUT','')
         old_title = input().strip()
         check_cancel(old_title)
         if notebook.note_exists(old_title):
@@ -210,15 +209,15 @@ def edit_note_interactive(notebook):
 
     while True:
         try:
-            print_message("New note title (or type 'cancel' to stop): ", 'INPUT','') 
+            print_message("New note title (or type 'cancel' to stop): ", 'INPUT','')
             new_title = input().strip()
             check_cancel(new_title)
-            new_title = Title(new_title)    
+            new_title = Title(new_title)
             break
         except ValueError as e:
-            print_message(e, 'ERROR')
+            print_message(str(e), 'ERROR')
 
-    print_message("New note text (or type 'cancel' to stop): ", 'INPUT','') 
+    print_message("New note text (or type 'cancel' to stop): ", 'INPUT','')
     new_text = input().strip()
     check_cancel(new_text)
 
@@ -235,7 +234,7 @@ def main():
     notebook = NoteBook()
 
     print("Welcome to the Contact Book Assistant!")
-    notebook.load_notes(show_error = False)
+    notebook.load_notes(show_message = False)
     book.load_contacts_book()
     print("Type 'help' to see the list of available commands.")
 
@@ -290,7 +289,7 @@ def main():
 
             elif command == "exit":
                 book.save_contacts_book()
-                notebook.save_notes(show_error = False)
+                notebook.save_notes(show_message = False)
                 print("Goodbye!")
                 sys.exit()
 

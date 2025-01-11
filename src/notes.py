@@ -66,25 +66,32 @@ class NoteBook:
                 return
         print_message("Note not found.", 'ERROR')
 
-    def save_notes(self, filename: str = 'notes.pkl', show_error: bool = True):
+    def save_notes(self, filename: str = 'notes.pkl', show_message: bool = True):
         """Зберігає нотатки у файл."""
         if not self.notes:
-            if show_error:
+            if show_message:
                 print_message("No notes to save.", 'ERROR')
             return
         with open(filename, 'wb') as file:
             pickle.dump(self.notes, file)
-        print_message("Notes successfully saved.", 'SUCCESS')
+        if show_message:
+            print_message("Notes successfully saved.", 'SUCCESS')
 
-    def load_notes(self, filename: str = 'notes.pkl', show_error: bool = True):
+    def load_notes(self, filename: str = 'notes.pkl', show_message: bool = True):
         """Завантажує нотатки з файлу."""
         try:
             with open(filename, 'rb') as file:
                 self.notes = pickle.load(file)
-            print_message("Notes successfully loaded.", 'SUCCESS')
+            if show_message:
+                print_message("Notes successfully loaded.", 'SUCCESS')
         except FileNotFoundError:
-            if show_error:
-                print_message("File not found, creating a new one.", 'ERROR')
+            self.notes = []
+            if show_message:
+                print_message(f"File {filename} not found. Initializing empty notes.", 'ERROR')
+        except Exception as e:
+            self.notes = []
+            if show_message:
+                print_message(f"An error occurred while loading notes: {str(e)}", 'ERROR')
 
     def display_notes(self):
         """Відображає всі нотатки."""
