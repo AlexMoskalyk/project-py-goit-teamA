@@ -55,7 +55,8 @@ def add_contact_interactive(book):
   
     while True:
         try:
-            name_input = input("Enter name (or type 'cancel' to stop): ").strip()
+            print_message("Enter name (or type 'cancel' to stop): ", 'INPUT', end='')
+            name_input = input().strip()
             check_cancel(name_input)
             name = Name(name_input)
             break
@@ -64,7 +65,8 @@ def add_contact_interactive(book):
 
     while True:
         try:
-            phone_input = input("Enter phone (or type 'cancel' to stop): ").strip()
+            print_message("Enter phone (or type 'cancel' to stop): ", 'INPUT', end='')
+            phone_input = input().strip()
             check_cancel(phone_input)
             phone = Phone(phone_input)
             break
@@ -73,7 +75,8 @@ def add_contact_interactive(book):
 
     while True:
         try:
-            email_input = input("Enter email (optional, or type 'cancel' to stop): ").strip()
+            print_message("Enter email (optional, or type 'cancel' to stop): ", 'INPUT', end='')
+            email_input = input().strip()
             check_cancel(email_input)
             email = Email(email_input) if email_input else None
             break
@@ -82,7 +85,8 @@ def add_contact_interactive(book):
 
     while True:
         try:
-            address_input = input("Enter address (or type 'cancel' to stop): ").strip()
+            print_message("Enter address (or type 'cancel' to stop): ", 'INPUT', end='')
+            address_input = input().strip()
             check_cancel(address_input)
             address = Address(address_input)
             break
@@ -91,7 +95,8 @@ def add_contact_interactive(book):
 
     while True:
         try:
-            birthday_input = input("Enter birthday (DD.MM.YYYY, optional, or type 'cancel' to stop): ").strip()
+            print_message("Enter birthday (DD.MM.YYYY, optional, or type 'cancel' to stop): ", 'INPUT', end='')
+            birthday_input = input().strip()
             check_cancel(birthday_input)
             birthday = Birthday(birthday_input) if birthday_input else None
             break
@@ -107,6 +112,7 @@ def add_contact_interactive(book):
     ]
 
     add_contact(args, book)
+
 
 @input_error
 def edit_contact_phone(book):
