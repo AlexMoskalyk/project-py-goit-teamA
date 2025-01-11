@@ -40,9 +40,9 @@ def helper():
         "help": "Показати список доступних команд.",
         "exit": "Вийти з програми.",
     }
-    print("\nAvailable commands:")
+    print_message("\nAvailable commands:", "HELP")
     for command, description in commands.items():
-        print(f"  {command:15} - {description}")
+        print_message(f"  {command:15} - {description}","HELP")
 
 def check_cancel(input_text: str):
     """Перевіряє, чи ввів користувач команду скасування."""
