@@ -1,9 +1,9 @@
+import re
+import pickle
 from collections import UserDict
 from datetime import datetime, timedelta
-import re
 from src.notifications import print_message
-import pickle
-
+from src.helpers import input_error
 
 class Field:
     def __init__(self, value):
@@ -197,17 +197,6 @@ class ContactsBook(UserDict):
         else:
             for contact in self.data.values():
                 print_message(str(contact), 'SUCCESS')
-
-
-def input_error(func):
-    """Декоратор для обробки помилок вводу."""
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except (IndexError, ValueError) as e:
-            print_message(str(e), 'ERROR')
-    return wrapper
-
 
 @input_error
 def add_contact(args, book):

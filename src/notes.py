@@ -1,7 +1,7 @@
 import pickle
 from typing import List
-from notifications import print_message
-from contacts_book import Field
+from src.notifications import print_message
+from src.contacts_book import Field
 
 class Title(Field):
     """Клас для заголовку нотатки (обмеження до 50 символів)."""
