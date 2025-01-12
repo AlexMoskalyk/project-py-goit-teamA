@@ -167,16 +167,19 @@ class ContactsBook(UserDict):
             print_message(f"No contact found with the name {name}.", 'ERROR')
 
     def get_upcoming_birthdays(self):
-        upcoming_birthdays = []
-        today = datetime.today()
-        for record in self.data.values():
-            if record.birthday:
-                birthday_this_year = record.birthday.value.replace(year=today.year)
-                if today <= birthday_this_year <= today + timedelta(days=7):
-                    upcoming_birthdays.append(record)
-        if not upcoming_birthdays:
-            print_message("No upcoming birthdays found.", 'INFO')
-        return upcoming_birthdays
+      upcoming_birthdays = []
+      today = datetime.today().date()
+      for record in self.data.values():
+          if record.birthday:
+              if isinstance(record.birthday, str):
+                  # If birthday is stored as a string, convert it to a Birthday object
+                  record.birthday = Birthday(record.birthday)
+              birthday_this_year = record.birthday.value.replace(year=today.year)
+              if today <= birthday_this_year <= today + timedelta(days=7):
+                  upcoming_birthdays.append(record)
+      if not upcoming_birthdays:
+          print_message("No upcoming birthdays found.", 'INFO')
+      return upcoming_birthdays
     
     def save_contacts_book(self, filename: str = 'contact_book.pkl'):
         with open(filename, 'wb') as file:
