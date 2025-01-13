@@ -94,7 +94,7 @@ def main():
                 check_cancel(query)
                 results = notebook.search_notes(query)
                 for note in results:
-                    print(note)
+                    print_message(str(note), 'SUCCESS')
 
             elif command == 'delete note':
                 print_message("Note text (or type 'cancel' to stop): ", 'INPUT','')
