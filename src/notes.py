@@ -49,7 +49,7 @@ class NoteBook:
     def remove_note(self, title: str):
         """Видаляє нотатку за заголовком."""
         initial_length = len(self.notes)
-        self.notes = [n for n in self.notes if n.title.value != title]
+        self.notes = [n for n in self.notes if n.title.value.lower() != title.lower()]
         if len(self.notes) < initial_length:
             print_message("Note successfully removed.", 'SUCCESS')
         else:
