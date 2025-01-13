@@ -1,8 +1,9 @@
+import re
+import pickle
 from collections import UserDict
 from datetime import datetime, timedelta
-import re
 from src.notifications import print_message
-
+from src.helpers import input_error
 
 class Field:
     def __init__(self, value):
@@ -64,7 +65,7 @@ class Birthday(Field):
     """Клас для зберігання дати народження у форматі DD.MM.YYYY."""
     def __init__(self, value):
         try:
-            self.value = datetime.strptime(value, "%d.%m.%Y")
+            self.value = datetime.strptime(value, "%d.%m.%Y").date()
         except ValueError:
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
 
@@ -118,9 +119,22 @@ class Record:
     def add_address(self, address):
         self.address = Address(address)
 
+    def edit_address(self, new_address):
+        if not self.address:
+            raise ValueError(f"Contact {self.name.value} has no address to edit.")
+        if self.address.value == new_address:
+            raise ValueError("The same address is already exist")
+        self.address.value = new_address
+
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
 
+    def edit_birthday(self, new_birthday):
+        if not self.birthday:
+            raise ValueError(f"Contact {self.name.value} has no birthday to edit.")
+        if self.birthday.value == new_birthday:
+            raise ValueError(f"Contact {self.name.value} has birthday this birthday already.")
+        self.birthday = new_birthday
 
 
     def __str__(self):
@@ -153,27 +167,39 @@ class ContactsBook(UserDict):
             print_message(f"No contact found with the name {name}.", 'ERROR')
 
     def get_upcoming_birthdays(self):
-        upcoming_birthdays = []
-        today = datetime.today()
-        for record in self.data.values():
-            if record.birthday:
-                birthday_this_year = record.birthday.value.replace(year=today.year)
-                if today <= birthday_this_year <= today + timedelta(days=7):
-                    upcoming_birthdays.append(record)
-        if not upcoming_birthdays:
-            print_message("No upcoming birthdays found.", 'INFO')
-        return upcoming_birthdays
+      upcoming_birthdays = []
+      today = datetime.today().date()
+      for record in self.data.values():
+          if record.birthday:
+              if isinstance(record.birthday, str):
+                  # If birthday is stored as a string, convert it to a Birthday object
+                  record.birthday = Birthday(record.birthday)
+              birthday_this_year = record.birthday.value.replace(year=today.year)
+              if today <= birthday_this_year <= today + timedelta(days=7):
+                  upcoming_birthdays.append(record)
+      if not upcoming_birthdays:
+          print_message("No upcoming birthdays found.", 'INFO')
+      return upcoming_birthdays
+    
+    def save_contacts_book(self, filename: str = 'contact_book.pkl'):
+        with open(filename, 'wb') as file:
+            pickle.dump(self.data, file)
+        print_message("Contacts successfully saved", 'SUCCESS')
 
-
-def input_error(func):
-    """Декоратор для обробки помилок вводу."""
-    def wrapper(*args, **kwargs):
+    def load_contacts_book(self, filename: str = 'contact_book.pkl'):
         try:
-            return func(*args, **kwargs)
-        except (IndexError, ValueError) as e:
-            print_message(str(e), 'ERROR')
-    return wrapper
+            with open(filename, 'rb') as file:
+                self.data = pickle.load(file)
+            print_message("Contacts successfully loaded", 'SUCCESS')
+        except FileNotFoundError:
+            print_message("No saved contacts found.", 'WARNING')
 
+    def display_contacts(self):
+        if not self.data:
+            print_message("Contacts is empty", 'ERROR')
+        else:
+            for contact in self.data.values():
+                print_message(str(contact), 'SUCCESS')
 
 @input_error
 def add_contact(args, book):
